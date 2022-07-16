@@ -5,4 +5,8 @@ body {
 
     background-color: var(--clr-primary-100);
     color: var(--clr-neutral-900);
+
+    ::selection {
+        background-color: var(--clr-primary-600);
+    }
 }
