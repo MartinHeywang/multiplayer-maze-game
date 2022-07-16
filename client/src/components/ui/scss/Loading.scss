@@ -1,0 +1,25 @@
+.Loading {
+    --size: 64px;
+    width: var(--size);
+    height: var(--size);
+
+    animation: spin 2s infinite linear;
+
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        33% {
+            transform: rotate(120deg);
+        }
+
+        66% {
+            transform: rotate(240deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+}
