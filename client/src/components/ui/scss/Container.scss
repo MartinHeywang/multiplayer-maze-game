@@ -1,0 +1,14 @@
+.Container {
+    --max-width: 1200px;
+    width: min(85%, var(--max-width));
+
+    margin: 0 auto;
+}
+
+.Container--medium {
+    --max-width: 800px;
+}
+
+.Container--tight {
+    --max-width: 400px;
+}

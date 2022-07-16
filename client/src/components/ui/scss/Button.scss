@@ -1,0 +1,28 @@
+.Button {
+    display: inline-block;
+    
+    border: none;
+    background-color: var(--clr-primary-600);
+    padding: .5em 1.5em;
+
+    font: inherit;
+    color: var(--clr-neutral-900);
+    font-weight: bold;
+}
+
+.Button:hover {
+    filter: brightness(60%);
+    cursor: pointer;
+}
+
+.Button:focus-visible {
+    outline: 2px solid;
+    outline-offset: 2px;
+}
+
+.Button--disabled {
+    pointer-events: none;
+    user-select: none;
+
+    filter: grayscale(100%) brightness(60%);
+}
