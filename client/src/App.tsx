@@ -1,9 +1,9 @@
 import React, { FC } from "react";
 
-import HomePage from "./pages/Home";
-import LoadingPage from "./pages/Loading";
+import HomePage from "@/pages/Home";
+import LoadingPage from "@/pages/Loading";
 
-import "./App.scss";
+import "@/App.scss";
 import { Route, Routes } from "react-router-dom";
 
 const App: FC<{}> = () => {

@@ -1,8 +1,8 @@
 import React, { FC } from "react";
 
-import logo from "../../assets/favicon.svg";
-import Button from "../../components/ui/Button";
-import Container from "../../components/ui/Container";
+import logo from "@/assets/favicon.svg";
+import Button from "@/components/ui/Button";
+import Container from "@/components/ui/Container";
 
 import "./scss/Home.scss";
 
