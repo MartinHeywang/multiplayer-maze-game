@@ -1,0 +1,20 @@
+$theme: (
+    primary: (
+        100: hsl(235, 90%, 5%),
+        300: hsl(235, 30%, 15%),
+        600: hsl(235, 90%, 55%),
+        900: hsl(235, 90%, 80%),
+    ),
+    neutral: (
+        100: hsl(0, 0%, 0%),
+        900: hsl(0, 0%, 93%)
+    )
+);
+
+:root {
+    @each $type, $colors in $theme {
+        @each $name, $color in $colors {
+            --clr-#{$type}-#{$name}: #{$color};
+        }
+    }
+}
