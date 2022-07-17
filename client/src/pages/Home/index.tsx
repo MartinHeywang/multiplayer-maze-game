@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { useNavigate } from "react-router-dom";
 
 import logo from "@/assets/favicon.svg";
 import Button from "@/components/ui/Button";
@@ -8,6 +9,8 @@ import "./scss/Home.scss";
 
 const Home: FC<{}> = () => {
 
+    const navigate = useNavigate();
+
     return (
         <div className="Home">
             <Container type="tight">
@@ -16,7 +19,7 @@ const Home: FC<{}> = () => {
                     <span className="Home__logo-text">Tower Defense multi-joueur</span>
                 </div>
                 <p>Le jeu est en cours de développement!</p>
-                <Button action={() => {}} className="Home__btn" disabled>C'est parti !</Button>
+                <Button action={() => navigate("/setup")} className="Home__btn">C'est parti !</Button>
             </Container>
         </div>
     );
