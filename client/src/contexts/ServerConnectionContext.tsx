@@ -4,9 +4,11 @@ import { OurClientSocket } from "otd-types";
 
 import { io } from "socket.io-client";
 
+import serverConfig from "@/data/serverConfig";
+
 type ContextValue = {
     socket: OurClientSocket | null;
-    connect?: (uri: string) => Promise<OurClientSocket>;
+    connect?: (ip: string) => Promise<OurClientSocket>;
     disconnect?: () => void;
 };
 
@@ -22,15 +24,25 @@ const ServerConnectionProvider: FC<{ children: React.ReactNode }> = ({ children 
 
     const isSocketUsable = () => socket !== null && socket.connected;
 
-    function connect(uri: string) {
-        if (isSocketUsable()) {
-            throw new Error(
-                "Impossible de se connecter, car une autre connexion est active en ce moment."
-            );
-        }
-
+    function connect(ip: string) {
         return new Promise<OurClientSocket>((resolve, reject) => {
-            const socket = io(uri);
+            if (isSocketUsable()) reject(new Error("Une autre connexion est active en ce moment."));
+
+            const invalidFormatError = () =>
+                reject(new Error("Format d'IP invalide. (exemple: 127.0.0.1)"));
+
+            const ipStringArray = ip.split(".");
+            if (ipStringArray.length !== 4) return invalidFormatError();
+
+            try {
+                ipStringArray.map(term => parseInt(term));
+            } catch {
+                return invalidFormatError();
+            }
+
+            const socket = io(`http://${ip}:${serverConfig.port}`, {
+                reconnectionAttempts: 3
+            });
 
             let invalid = false;
             // function that returns true the first time, then false forever
@@ -51,7 +63,14 @@ const ServerConnectionProvider: FC<{ children: React.ReactNode }> = ({ children 
             socket.once("connect_error", error => {
                 if (!invalidate()) return;
 
-                reject(error);
+                const errorMap = {
+                    "xhr poll error": "IP incorrecte ou serveur indisponible."
+                }
+
+                console.log(error.message);
+
+                // convert socket.io message to user-friendly message
+                reject(new Error(errorMap[error.message as keyof typeof errorMap] ?? "Erreur interne."));
             });
 
             socket.connect();
