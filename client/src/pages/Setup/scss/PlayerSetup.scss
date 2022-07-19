@@ -1,6 +1,22 @@
-.ServerSetup {
+.PlayerSetup {
 
-    .form {
+    button {
+        width: 100%;
+    }
+
+    .player {
+        display: flex;
+        gap: .5em;
+        padding: 1em 0;
+
+        .avatar {
+            width: 30%;
+        }
+    }
+
+    .pseudo-form {
+        width: 100%;
+
         .form-label,
         .form-input {
             display: block;
@@ -27,11 +43,11 @@
                 background-color: var(--clr-neutral-100);
             }
         }
-    }
 
-    .connect-btn,
-    .next-btn {
-        width: 100%;
+        .pseudo-btn {
+            width: 100%;
+            margin-top: 0.5em;
+        }
     }
 
     .message {
