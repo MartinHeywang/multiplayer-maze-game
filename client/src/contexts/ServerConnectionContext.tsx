@@ -57,6 +57,7 @@ const ServerConnectionProvider: FC<{ children: React.ReactNode }> = ({ children 
             socket.once("connect", () => {
                 if (!invalidate()) return;
 
+                setSocket(socket);
                 resolve(socket);
             });
 
@@ -66,8 +67,6 @@ const ServerConnectionProvider: FC<{ children: React.ReactNode }> = ({ children 
                 const errorMap = {
                     "xhr poll error": "IP incorrecte ou serveur indisponible."
                 }
-
-                console.log(error.message);
 
                 // convert socket.io message to user-friendly message
                 reject(new Error(errorMap[error.message as keyof typeof errorMap] ?? "Erreur interne."));

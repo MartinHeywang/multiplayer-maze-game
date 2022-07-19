@@ -13,7 +13,7 @@ const Setup: FC<{}> = () => {
     return (
         <div className="Setup">
             <Container type="tight">
-                {[<ServerSetup nextStep={() => setStep(old => old + 1)} />, <PlayerSetup />][step]}
+                {[<ServerSetup nextStep={() => setStep(old => old + 1)} />, <PlayerSetup done={() => {}}/>][step]}
             </Container>
         </div>
     );
