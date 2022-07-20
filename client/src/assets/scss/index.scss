@@ -1,5 +1,11 @@
 @use "./color";
 
+*,
+::before,
+::after {
+    box-sizing: border-box;
+}
+
 body {
     font-family: "Source Sans Pro", Arial, sans-serif;
 
@@ -9,4 +15,12 @@ body {
     ::selection {
         background-color: var(--clr-primary-600);
     }
+}
+
+hr {
+    background-color: var(--clr-neutral-900);
+    border: none;
+
+    height: 1px;
+    margin: 1.5em 0;
 }
