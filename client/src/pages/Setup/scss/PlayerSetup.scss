@@ -1,0 +1,84 @@
+.PlayerSetup {
+
+    button {
+        width: 100%;
+    }
+
+    .player {
+        display: flex;
+        gap: .5em;
+        padding: 1em 0;
+
+        .avatar {
+            width: 30%;
+        }
+    }
+
+    .pseudo-form {
+        width: 100%;
+
+        .form-label,
+        .form-input {
+            display: block;
+            width: 100%;
+        }
+
+        .form-input {
+            margin-top: 0.3em;
+            padding: 0.3em;
+
+            border-radius: 0;
+            border: none;
+            background-color: var(--clr-neutral-900);
+
+            font: inherit;
+            color: var(--clr-neutral-100);
+
+            &:focus {
+                outline: 0.2em solid var(--clr-primary-600);
+            }
+
+            &::selection {
+                color: var(--clr-neutral-900);
+                background-color: var(--clr-neutral-100);
+            }
+        }
+
+        .pseudo-btn {
+            width: 100%;
+            margin-top: 0.5em;
+        }
+    }
+
+    .message {
+        display: inline-block;
+        font-size: 1.1rem;
+        padding: 0.2em 0.5em;
+        margin-top: 0;
+
+        background-color: var(--bgc, inherit);
+        color: var(--c, inherit);
+
+        &--valid {
+            --bgc: var(--clr-success-700);
+            --c: var(--clr-success-100);
+        }
+        &--info {
+            --bgc: var(--clr-info-700);
+            --c: var(--clr-info-100);
+        }
+        &--error {
+            --bgc: var(--clr-error-700);
+            --c: var(--clr-error-100);
+        }
+
+        &::selection {
+            background-color: var(--c);
+            color: var(--bgc);
+        }
+
+        &:empty {
+            display: none;
+        }
+    }
+}

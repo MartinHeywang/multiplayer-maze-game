@@ -2,13 +2,16 @@
     "name": "otd-types",
     "version": "0.0.0",
     "private": true,
+    "main": "src/index.ts",
     "description": "Types for my Online Tower Defense game",
     "author": "Martin Heywang",
     "license": "ISC",
+
     "devDependencies": {
         "typescript": "^4.7.4"
     },
     "dependencies": {
-        "socket.io": "^4.5.1"
+        "socket.io": "^4.5.1",
+        "socket.io-client": "^4.5.1"
     }
 }

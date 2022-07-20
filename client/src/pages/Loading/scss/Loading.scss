@@ -1,0 +1,9 @@
+.LoadingPage {
+    display: grid;
+    place-items: center;
+    height: 100vh;
+
+    .Loading {
+        --size: 128px;
+    }
+}
