@@ -64,6 +64,7 @@ function join(socket: OurSocket) {
     if (!nextGame) return;
 
     nextGame.sockets.add(socket);
+    socket.on("disconnect", () => nextGame!.sockets.delete(socket));
 
     player.editSocketData(socket, { hasJoinedNextGame: true });
 }
