@@ -19,7 +19,8 @@ export function loadRandomLabyrinth() {
 
     let y = 0;
     lines.forEach(line => {
-        if (line.startsWith("#")) return;
+        if (line.startsWith("#")) return; // comments
+        if (/^\s*$/g.test(line)) return; // empty lines
 
         if (isFirstDataLine) {
             const dimArray = line.split("x");

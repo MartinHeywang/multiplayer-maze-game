@@ -24,11 +24,13 @@ function editGameWithNotify(io: OurServer, game: Partial<Game>) {
         ...game,
     };
 
-    io.to("game:watching").emit("game:update", nextGame);
+    emitUpdate();
 }
 
-function emitUpdate(socket: OurSocket) {
-    socket.emit("game:update", nextGame);
+function emitUpdate(socket?: OurSocket) {
+    // emit to socket if provided, otherwise to all watching sockets
+    // + only provide the client version of games
+    (socket ?? io.to("game:watching")).emit("game:update", { ...nextGame, sockets: undefined, labyrinth: undefined } as GameBase);
 }
 
 function emitError(socket: OurSocket, message: string) {
@@ -67,6 +69,7 @@ function getCellsAround(coord: Coord) {
             cells[resultY][resultX] = labyrinth.cells[y][x];
             resultX++;
         }
+        resultX = 0;
         resultY++;
     }
     return cells;
@@ -131,7 +134,7 @@ function startGame() {
         });
     }
 
-    schedule(6, 22);
+    schedule(16, 27);
 
     initiateNewGame();
 }
