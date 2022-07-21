@@ -27,6 +27,8 @@ function initiateNewGame() {
 
     setTimeout(() => {
         editGameWithNotify(io, { status: "playing" });
+
+        io.to("game:next-game").emit("game:start");
     }, nextGame.plannedStartTime.getTime() - Date.now()); // when the game starts
 }
 
@@ -65,6 +67,8 @@ function join(socket: OurSocket) {
 
     nextGame.sockets.add(socket);
     socket.on("disconnect", () => nextGame!.sockets.delete(socket));
+
+    socket.join("game:next-game");
 
     player.editSocketData(socket, { hasJoinedNextGame: true });
 }
