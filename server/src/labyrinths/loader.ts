@@ -11,8 +11,13 @@ export function loadRandomLabyrinth() {
     let isFirstDataLine = true;
 
     let dimensions: { w: number; h: number } | null = null;
-    const labyrinth: Labyrinth = [];
+    const labyrinth: Labyrinth = {
+        cells: [],
+        startCoord: { x: -1, y: -1 },
+        exitCoord: { x: -1, y: -1 },
+    };
 
+    let y = 0;
     lines.forEach(line => {
         if (line.startsWith("#")) return;
 
@@ -35,12 +40,12 @@ export function loadRandomLabyrinth() {
             | "^" // start of the labyrinth
             | "$"; // exit of the labyrinth
 
-        let actualIndex = 0; // can't use the index provided by forEach because of the guard clauses
+        let x = 0; // can't use the index provided by forEach because of the guard clauses
         line.split(" ").forEach(cellDescriptor => {
             if (/^\s*$/g.test(cellDescriptor)) return;
-            if (actualIndex > dimensions!.h) return;
 
             const cell: Cell = {
+                coord: { x, y },
                 rightWall: false,
                 bottomWall: false,
                 start: false,
@@ -51,15 +56,24 @@ export function loadRandomLabyrinth() {
 
             if (modifiers.has("B")) cell.bottomWall = true;
             if (modifiers.has("R")) cell.rightWall = true;
-            if (modifiers.has("^")) cell.start = true;
-            if (modifiers.has("$")) cell.exit = true;
+
+            if (modifiers.has("^")) {
+                cell.start = true;
+                labyrinth.startCoord = { x, y };
+            } else if (modifiers.has("$")) {
+                cell.start = true;
+                labyrinth.exitCoord = { x, y };
+            }
 
             labyrinthRow.push(cell);
-            actualIndex++;
+            x++;
         });
 
-        labyrinth.push(labyrinthRow.slice(0, dimensions!.w));
+        labyrinth.cells.push(labyrinthRow.slice(0, dimensions!.w));
+        y++;
     });
+
+    labyrinth.cells = labyrinth.cells.slice(0, dimensions!.h);
 
     return labyrinth;
 }
