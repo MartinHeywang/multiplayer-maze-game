@@ -4,9 +4,10 @@ import { OurServer } from "otd-types";
 import ip from "ip";
 
 import * as player from "./player";
+import * as game from "./game";
 
 const httpServer = createServer();
-const io: OurServer = new Server(httpServer, {
+export const io: OurServer = new Server(httpServer, {
     cors: {}
 });
 
@@ -17,6 +18,7 @@ io.on("connection", socket => {
     console.log(`Socket ${socket.id} has just connected to the server!`);
 
     player.registerSocket(io, socket);
+    game.registerSocket(io, socket);
 
     socket.on("disconnect", reason => {
         console.log(`Socket ${socket.id} got disconnected. (reason: ${reason})`);
