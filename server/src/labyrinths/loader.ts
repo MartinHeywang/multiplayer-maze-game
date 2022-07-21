@@ -1,14 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-type Cell = {
-    rightWall: boolean;
-    bottomWall: boolean;
-    start: boolean;
-    exit: boolean;
-};
-
-type Labyrinth = Cell[][];
+import { Cell, Labyrinth } from "otd-types";
 
 export function loadRandomLabyrinth() {
     // not so random right now because there is only one labyrinth available
