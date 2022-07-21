@@ -1,10 +1,8 @@
 import React, { FC, useContext, useEffect, useRef, useState } from "react";
 
-import { Game as BaseGame } from "otd-types";
+import { Game } from "otd-types";
 import { useServerConnection } from "./ServerConnectionContext";
 import { usePlayer } from "./PlayerContext";
-
-type Game = BaseGame;
 
 type ContextValue = { game: Game | null; catchNextGameError: (cb: (err: string) => void) => void };
 
@@ -24,16 +22,32 @@ const GameProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
     useEffect(() => {
         if (!socket) return;
 
-        const handler = (game: BaseGame) => {
-            setGame({ ...game });
+        const handler = (game: Game | null) => {
+            const newGame: Game | null = game && {
+                ...game,
+
+                // some weird adjustments needs to be made
+                // the serialization performed by socket.io transforms date into string,
+                // but then not a date again
+                // so we're parsing it here
+                plannedStartTime: new Date(Date.parse(game.plannedStartTime as unknown as string)),
+            };
+
+            console.log("game:update");
+            console.log(game?.plannedStartTime);
+            console.log(newGame);
+
+            setGame(newGame);
             errorCallbacks.current.splice(0);
         };
 
         socket.on("game:update", handler);
 
         socket.emit("game:request-update");
+        socket.emit("game:watch", true);
 
         return () => {
+            socket.emit("game:watch", false);
             socket.off("game:update", handler);
         };
     }, [socket]);
