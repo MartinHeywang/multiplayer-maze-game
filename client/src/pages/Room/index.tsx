@@ -43,26 +43,37 @@ const Room: FC = () => {
     return (
         <div className="Room">
             <Container type="tight">
-                {socket && player && game && <Card>
-                    <h1>Salle d'attente</h1>
-                    <p>Prochaine partie dans :</p>
-                    <p className="countdown">{countdownText}</p>
-
-                    <h2>Inscription</h2>
-                    {game!.status !== "opened" ? (
-                        <p>
-                            Il est encore impossible de rejoindre cette partie. Il devient possible de
-                            rejoindre une partie à partir de 5 minutes avant son début.
+                {socket && player && game && (
+                    <Card>
+                        <h1>Salle d'attente</h1>
+                        <p>Prochaine partie dans :</p>
+                        <p className="countdown">
+                            {game.status === "playing" ? "Partie en cours" : countdownText}
                         </p>
-                    ) : !player!.hasJoinedNextGame ? (
-                        <>
-                            <p>L'inscription est ouverte!</p>
-                            <Button action={() => socket!.emit("game:join")}>Rejoindre!</Button>
-                        </>
-                    ) : (
-                        <p>Tu as rejoins cette partie. Amuses-toi bien&nbsp;!</p>
-                    )}
-                </Card>}
+
+                        {game!.status !== "playing" && (
+                            <>
+                                <h2>Inscription</h2>
+                                {game!.status !== "opened" ? (
+                                    <p>
+                                        Il est encore impossible de rejoindre cette partie. Il devient
+                                        possible de rejoindre une partie à partir de 5 minutes avant son
+                                        début.
+                                    </p>
+                                ) : !player!.hasJoinedNextGame ? (
+                                    <>
+                                        <p>L'inscription est ouverte!</p>
+                                        <Button action={() => socket!.emit("game:join")}>
+                                            Rejoindre!
+                                        </Button>
+                                    </>
+                                ) : (
+                                    <p>Tu as rejoins cette partie. Amuses-toi bien&nbsp;!</p>
+                                )}
+                            </>
+                        )}
+                    </Card>
+                )}
             </Container>
         </div>
     );
