@@ -24,6 +24,8 @@ const Play: FC = () => {
                 {cells?.flat().map(cell => {
                     return <Cell cell={cell} key={`${cell?.coord.x}.${cell?.coord.y}`} />
                 })}
+
+                <div className="player"></div>
             </div>
         </div>
     </div>;
