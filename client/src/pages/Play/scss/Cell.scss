@@ -1,13 +1,28 @@
+@use "./Play.scss" as *;
+
 .Cell {
     background-color: #444;
 }
 
 .Cell--right-wall {
-    border-right: 2px solid var(--clr-neutral-900);
+    border-right: $wall-width solid var(--clr-neutral-900);
+    position: relative;
+
+    &::after {
+        content: "";
+
+        width: $wall-width;
+        height: $wall-width;
+        background-color: var(--clr-neutral-900);
+
+        position: absolute;
+        right: -$wall-width;
+        bottom: calc(100% + 1px);
+    }
 }
 
 .Cell--bottom-wall {
-    border-bottom: 2px solid var(--clr-neutral-900);
+    border-bottom: $wall-width solid var(--clr-neutral-900);
 }
 
 .Cell--start {
