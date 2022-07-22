@@ -1,0 +1,19 @@
+.Cell {
+    background-color: #444;
+}
+
+.Cell--right-wall {
+    border-right: 2px solid var(--clr-neutral-900);
+}
+
+.Cell--bottom-wall {
+    border-bottom: 2px solid var(--clr-neutral-900);
+}
+
+.Cell--start {
+    background-color: mix(red, #444, 20%);
+}
+
+.Cell--exit {
+    background-color: mix(green, #444, 20%);
+}

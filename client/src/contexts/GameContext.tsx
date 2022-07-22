@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 type ContextValue = {
     game: Game | null;
-    cells: Cell[][] | null;
+    cells: (Cell | null)[][] | null;
     playerPos: Coord | null;
     catchNextGameError: (cb: (err: string) => void) => void;
 };
@@ -23,7 +23,7 @@ const GameProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
     const { player } = usePlayer();
 
     const [game, setGame] = useState<Game | null>(null);
-    const [cells, setCells] = useState<Cell[][] | null>(null);
+    const [cells, setCells] = useState<(Cell | null)[][] | null>(null);
     const [playerPos, setPlayerPos] = useState<Coord | null>(null);
 
     const navigate = useNavigate();
@@ -67,7 +67,7 @@ const GameProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
         const handler = (cells: Cell[][], playerPos: Coord) => {
             setCells(
                 (() => {
-                    let result: Cell[][] = [];
+                    let result: (Cell | null)[][] = [];
 
                     cells.flat().forEach(cell => {
                         result[cell.coord.y] ||= [];
