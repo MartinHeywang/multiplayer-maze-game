@@ -1,10 +1,16 @@
 import React, { FC, useContext, useEffect, useRef, useState } from "react";
 
-import { Game } from "otd-types";
+import { Cell, Coord, Game } from "otd-types";
 import { useServerConnection } from "./ServerConnectionContext";
 import { usePlayer } from "./PlayerContext";
+import { useNavigate } from "react-router-dom";
 
-type ContextValue = { game: Game | null; catchNextGameError: (cb: (err: string) => void) => void };
+type ContextValue = {
+    game: Game | null;
+    cells: Cell[][] | null;
+    playerPos: Coord | null;
+    catchNextGameError: (cb: (err: string) => void) => void;
+};
 
 // @ts-ignore
 // stupid context default values
@@ -14,7 +20,13 @@ const { Provider, Consumer } = GameContext;
 
 const GameProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
     const { socket } = useServerConnection();
+    const { player } = usePlayer();
+
     const [game, setGame] = useState<Game | null>(null);
+    const [cells, setCells] = useState<Cell[][] | null>(null);
+    const [playerPos, setPlayerPos] = useState<Coord | null>(null);
+
+    const navigate = useNavigate();
 
     const errorCallbacks = useRef<((err: string) => void)[]>([]);
 
@@ -33,10 +45,6 @@ const GameProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
                 plannedStartTime: new Date(Date.parse(game.plannedStartTime as unknown as string)),
             };
 
-            console.log("game:update");
-            console.log(game?.plannedStartTime);
-            console.log(newGame);
-
             setGame(newGame);
             errorCallbacks.current.splice(0);
         };
@@ -52,6 +60,36 @@ const GameProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
         };
     }, [socket]);
 
+    useEffect(() => {
+        if (!socket) return;
+        if (player?.hasJoinedNextGame !== true) return;
+
+        const handler = (cells: Cell[][], playerPos: Coord) => {
+            setCells(
+                (() => {
+                    let result: Cell[][] = [];
+
+                    cells.flat().forEach(cell => {
+                        result[cell.coord.y] ||= [];
+                        result[cell.coord.y][cell.coord.x] = cell;
+                    });
+
+                    return result;
+                })()
+            );
+
+            setPlayerPos(playerPos);
+
+            navigate("/play");
+        };
+
+        socket.on("game:start", handler);
+
+        return () => {
+            socket.off("game:start", handler);
+        };
+    }, [player?.hasJoinedNextGame]);
+
     function catchNextGameError(cb: (msg: string) => void) {
         if (!socket) return;
 
@@ -59,7 +97,7 @@ const GameProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
         errorCallbacks.current.push(cb);
     }
 
-    return <Provider value={{ game, catchNextGameError }}>{children}</Provider>;
+    return <Provider value={{ game, cells, playerPos, catchNextGameError }}>{children}</Provider>;
 };
 
 export const useGame = () => useContext(GameContext);

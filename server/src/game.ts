@@ -134,7 +134,7 @@ function startGame() {
         });
     }
 
-    schedule(16, 27);
+    schedule(6, 48);
 
     initiateNewGame();
 }
