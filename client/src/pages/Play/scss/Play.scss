@@ -1,3 +1,8 @@
+$cell-size: 5em;
+$board-grid-gap: 1px;
+$board-frame-border-width: 4px;
+$wall-width: 2px;
+
 .Play {
     display: grid;
     place-items: center;
@@ -5,12 +10,21 @@
 
     --player-x: 2;
     --player-y: 3;
-}
 
-$cell-size: 5em;
-$board-grid-gap: 1px;
-$board-frame-border-width: 4px;
-$wall-width: 2px;
+    .player {
+        position: absolute;
+        top: calc(1em - 1px);
+        left: calc(1em - 1px);
+        width: 3em;
+        height: 3em;
+        background-color: yellow;
+
+        transform: translate(
+            calc(var(--player-x) * ($cell-size + $board-grid-gap)),
+            calc(var(--player-y) * ($cell-size + $board-grid-gap))
+        );
+    }
+}
 
 .board-frame {
     width: calc(5 * $cell-size + $board-frame-border-width * 2 + 4 * $board-grid-gap);
@@ -34,18 +48,4 @@ $wall-width: 2px;
         calc($cell-size * max(var(--player-x) - 2, 0) * -1),
         calc($cell-size * max(var(--player-y) - 2, 0) * -1)
     ); // through JavaScript
-}
-
-.player {
-    position: absolute;
-    top: calc(1em - 1px);
-    left: calc(1em - 1px);
-    width: 3em;
-    height: 3em;
-    background-color: yellow;
-
-    transform: translate(
-        calc(var(--player-x) * ($cell-size + $board-grid-gap)), 
-        calc(var(--player-y) * ($cell-size + $board-grid-gap)),
-    );
 }
