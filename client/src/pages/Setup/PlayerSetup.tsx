@@ -2,7 +2,7 @@ import Button from "@/components/ui/Button";
 import { usePlayer } from "@/contexts/PlayerContext";
 import { useServerConnection } from "@/contexts/ServerConnectionContext";
 import React, { FC, useEffect, useId, useRef, useState } from "react";
-import Card from "./Card";
+import Card from "@/components/ui/Card";
 
 import "./scss/PlayerSetup.scss";
 

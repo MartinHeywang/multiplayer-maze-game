@@ -10,6 +10,7 @@ export function registerSocket(_: OurServer, socket: OurSocket) {
     const data: Player = {
         username: randomUsername(),
         avatarUrl: randomAvatarUrl(),
+        hasJoinedNextGame: false,
     };
 
     editSocketData(socket, data);
@@ -27,7 +28,7 @@ function randomAvatarUrl() {
     return `https://avatars.dicebear.com/api/open-peeps/${uuidv4()}.svg`;
 }
 
-function editSocketData(socket: OurSocket, data: Partial<OurSocket["data"]["player"]>) {
+export function editSocketData(socket: OurSocket, data: Partial<OurSocket["data"]["player"]>) {
     socket.data.player = {
         ...socket.data.player!,
         ...data,

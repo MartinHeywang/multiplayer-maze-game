@@ -1,0 +1,12 @@
+10x10
+
+C    CB   CR   CB   CB   CR   C    CB   CB   CB
+CR   CR   C    C    CR   CR   CR   C    C    C
+CB   CBR  C    CR   CR   CR   CR   CR   CR   C
+C    CB   CBR^ CR   CR   CR   C    CBR  CR   C
+CR   C    C    CBR  CR   C    CR   CBR  CR   C
+CR   CR   CR   C    CR   CB   CB   CBR$ CR   C
+CR   CR   CR   CR   CB   CB   CB   CB   CR   C
+CR   CR   CR   CB   CB   CB   CR   C    CR   C
+CR   CB   CB   CB   CB   CBR  CR   C    CR   C
+C    CR   C    CR   C    C    C    C    C    C

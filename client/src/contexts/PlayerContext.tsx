@@ -19,7 +19,6 @@ const PlayerProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
 
     // update state on "player:update"
     useEffect(() => {
-        console.log("useEffect");
         if (!socket) return;
 
         const handler = (player: Player) => {

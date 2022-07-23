@@ -1,0 +1,15 @@
+.Room {
+    padding: 3rem 0;
+
+    .countdown {
+        // display: inline-block;
+
+        padding: 2rem 3rem;
+        background-color: var(--clr-info-700);
+        
+        color: var(--clr-info-100);
+        font-size: 1.5rem;
+        text-align: center;
+        font-weight: bold;
+    }
+}

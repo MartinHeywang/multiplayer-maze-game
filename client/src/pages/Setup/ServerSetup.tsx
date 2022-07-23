@@ -1,7 +1,7 @@
 import React, { useId, FC, useRef, useState } from "react";
 
 import Button from "@/components/ui/Button";
-import Card from "./Card";
+import Card from "@/components/ui/Card";
 
 import "./scss/ServerSetup.scss";
 import { useServerConnection } from "@/contexts/ServerConnectionContext";

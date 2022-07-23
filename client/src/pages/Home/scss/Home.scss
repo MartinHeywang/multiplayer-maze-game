@@ -32,3 +32,18 @@
     border-right: none;
     border-left-color: var(--clr-neutral-900);
 }
+
+.Home {
+    .labyrinth {
+        display: inline-block;
+        padding: .1em .3em;
+        background-color: var(--clr-primary-300);
+    }
+    
+    .koeb {
+        display: inline-block;
+        padding: .1em .3em;
+        background-color: var(--clr-primary-600);
+        color: var(--clr-neutral-900);
+    }
+}
