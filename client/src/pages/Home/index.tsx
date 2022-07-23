@@ -15,11 +15,13 @@ const Home: FC<{}> = () => {
         <div className="Home">
             <Container type="tight">
                 <div className="Home__logo">
-                    <img className="Home__logo-img" src={logo} />
-                    <span className="Home__logo-text">Tower Defense multi-joueur</span>
+                    <span className="Home__logo-text">
+                        Le <span className="labyrinth">Labyrinthe</span> du <span className="koeb">Koeb'</span>
+                    </span>
                 </div>
-                <p>Le jeu est en cours de développement!</p>
-                <Button action={() => navigate("/setup")} className="Home__btn">C'est parti !</Button>
+                <Button action={() => navigate("/setup")} className="Home__btn">
+                    C'est parti !
+                </Button>
             </Container>
         </div>
     );
