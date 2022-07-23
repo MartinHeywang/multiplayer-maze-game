@@ -1,0 +1,60 @@
+$cell-size: 5em;
+$board-grid-gap: 1px;
+$board-frame-border-width: 4px;
+$wall-width: 2px;
+
+.Play {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+
+    --player-x: 2;
+    --player-y: 3;
+
+    .player {
+        position: absolute;
+        top: calc(1em - 1px);
+        left: calc(1em - 1px);
+        width: 3em;
+        height: 3em;
+        background-color: yellow;
+
+        transform: translate(
+            calc(var(--player-x) * ($cell-size + $board-grid-gap)),
+            calc(var(--player-y) * ($cell-size + $board-grid-gap))
+        );
+        transition: transform 100ms ease-in-out;
+    }
+}
+
+.board-frame {
+    width: calc(5 * $cell-size + $board-frame-border-width * 2 + 4 * $board-grid-gap);
+    height: calc(5 * $cell-size + $board-frame-border-width * 2 + 4 * $board-grid-gap);
+    overflow: hidden;
+
+    border: 4px solid white;
+    background-color: #333;
+    box-shadow: 1em 1em 0 0 rgba(0, 0, 0, 0.8);
+}
+
+.board {
+    display: grid;
+    gap: $board-grid-gap;
+
+    --cells-count: 5; // default overridden through JavaScript
+    grid-template-columns: repeat(var(--cells-count), $cell-size);
+    grid-template-rows: repeat(var(--cells-count), $cell-size);
+
+    transform: translate(
+        // twice the same translation for both axis, only detailing one
+        calc(
+                ($cell-size + $board-grid-gap) // unit width
+                * clamp(0, var(--player-x) - 2, var(--cells-count) - 5)
+                    // times (player-x - 2) in a min-max
+                * -1
+            ),
+        // opposite
+        calc(($cell-size + $board-grid-gap) * clamp(0, var(--player-y) - 2, var(--cells-count) - 5) * -1)
+    ); // through JavaScript
+    transition: transform 100ms ease-in-out;
+}

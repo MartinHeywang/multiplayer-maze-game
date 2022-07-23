@@ -22,10 +22,10 @@ const GlobalContexts: FC<{ children: React.ReactNode }> = ({ children }) => {
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
-        <GlobalContexts>
-            <HashRouter>
+        <HashRouter>
+            <GlobalContexts>
                 <App />
-            </HashRouter>
-        </GlobalContexts>
+            </GlobalContexts>
+        </HashRouter>
     </React.StrictMode>
 );

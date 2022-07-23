@@ -5,10 +5,11 @@ import ip from "ip";
 
 import * as player from "./player";
 import * as game from "./game";
+import { loadRandomLabyrinth } from "./labyrinths/loader";
 
 const httpServer = createServer();
 export const io: OurServer = new Server(httpServer, {
-    cors: {}
+    cors: {},
 });
 
 const HOSTNAME = ip.address();

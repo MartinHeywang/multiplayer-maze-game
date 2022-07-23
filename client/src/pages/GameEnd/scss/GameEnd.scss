@@ -1,0 +1,16 @@
+.GameEnd {
+
+    padding: 5rem 0;
+
+    .player {
+        display: flex;
+        align-items: center;
+        gap: 1em;
+
+        padding-bottom: 2rem;
+
+        img {
+            width: 25%;
+        }
+    }
+}
