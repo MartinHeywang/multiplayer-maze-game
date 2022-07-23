@@ -30,7 +30,11 @@ function editGameWithNotify(io: OurServer, game: Partial<Game>) {
 function emitUpdate(socket?: OurSocket) {
     // emit to socket if provided, otherwise to all watching sockets
     // + only provide the client version of games
-    (socket ?? io.to("game:watching")).emit("game:update", { ...nextGame, sockets: undefined, labyrinth: undefined } as GameBase);
+    (socket ?? io.to("game:watching")).emit("game:update", {
+        ...nextGame,
+        sockets: undefined,
+        labyrinth: undefined,
+    } as GameBase);
 }
 
 function emitError(socket: OurSocket, message: string) {
@@ -57,8 +61,8 @@ function getCellsAround(coord: Coord) {
     const labyrinth = nextGame!.labyrinth;
     const minX = Math.max(coord.x - 2, 0);
     const minY = Math.max(coord.y - 2, 0);
-    const maxX = Math.min(minX + 4, labyrinth.cells[0].length);
-    const maxY = Math.min(minY + 4, labyrinth.cells.length);
+    const maxX = Math.min(minX + 4, labyrinth.dimensions.w - 1);
+    const maxY = Math.min(minY + 4, labyrinth.dimensions.h - 1);
 
     let cells: Cell[][] = [];
     let resultX = 0;
@@ -101,10 +105,83 @@ function openInscription() {
 function startGame() {
     editGameWithNotify(io, { status: "playing" });
 
+    io.in("game:next-game")
+        .allSockets()
+        .then(socketsId => {
+            socketsId.forEach(socketId => {
+                const socket = io.sockets.sockets.get(socketId)!;
+
+                socket.on("game:player-move", direction => move(socket, direction));
+
+                socket.data.game = { playerCoord: nextGame!.labyrinth.startCoord };
+            });
+        });
+
     io.to("game:next-game").emit(
-        "game:start",
+        "game:player-change",
+        nextGame!.labyrinth.dimensions,
         getCellsAround(nextGame!.labyrinth.startCoord),
         nextGame!.labyrinth.startCoord
+    );
+}
+
+function move(socket: OurSocket, direction: "up" | "left" | "right" | "down") {
+    const oldCoord = socket.data.game!.playerCoord;
+
+    const isMoveImpossible = () => {
+        try {
+            if (direction === "up")
+                return nextGame!.labyrinth.cells[oldCoord.y - 1][oldCoord.x].bottomWall;
+            if (direction === "left")
+                return nextGame!.labyrinth.cells[oldCoord.y][oldCoord.x - 1].rightWall;
+            if (direction === "right")
+                return nextGame!.labyrinth.cells[oldCoord.y][oldCoord.x].rightWall;
+            if (direction === "down")
+                return nextGame!.labyrinth.cells[oldCoord.y][oldCoord.x].bottomWall;
+        } catch {
+            // index out of bound error
+            // e.g if you try to go up but you're already at the top of the labyrinth
+            // -> impossible move
+            return true;
+        }
+    };
+
+    if (isMoveImpossible()) return;
+
+    const inBoundaries = (coord: Coord) => {
+        const minX = 0;
+        const minY = 0;
+        const maxX = nextGame!.labyrinth.cells[0].length - 1;
+        const maxY = nextGame!.labyrinth.cells.length - 1;
+
+        return {
+            x: Math.min(Math.max(coord.x, minX), maxX),
+            y: Math.min(Math.max(coord.y, minY), maxY),
+        };
+    };
+
+    const newCoord = inBoundaries(
+        (() => {
+            switch (direction) {
+                case "up":
+                    return { x: oldCoord.x, y: oldCoord.y - 1 };
+                case "left":
+                    return { x: oldCoord.x - 1, y: oldCoord.y };
+                case "right":
+                    return { x: oldCoord.x + 1, y: oldCoord.y };
+                case "down":
+                    return { x: oldCoord.x, y: oldCoord.y + 1 };
+            }
+        })()
+    );
+
+    socket.data.game!.playerCoord = newCoord;
+
+    socket.emit(
+        "game:player-change",
+        nextGame!.labyrinth.dimensions,
+        getCellsAround(newCoord),
+        newCoord
     );
 }
 
@@ -134,7 +211,7 @@ function startGame() {
         });
     }
 
-    schedule(14, 2);
+    schedule(8, 3);
 
     initiateNewGame();
 }

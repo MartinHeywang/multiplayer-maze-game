@@ -23,6 +23,7 @@ $wall-width: 2px;
             calc(var(--player-x) * ($cell-size + $board-grid-gap)),
             calc(var(--player-y) * ($cell-size + $board-grid-gap))
         );
+        transition: transform 100ms ease-in-out;
     }
 }
 
@@ -32,20 +33,28 @@ $wall-width: 2px;
     overflow: hidden;
 
     border: 4px solid white;
+    background-color: #333;
     box-shadow: 1em 1em 0 0 rgba(0, 0, 0, 0.8);
 }
 
 .board {
     display: grid;
-    gap: 1px;
-    background-color: #333;
+    gap: $board-grid-gap;
 
     --cells-count: 5; // default overridden through JavaScript
     grid-template-columns: repeat(var(--cells-count), $cell-size);
     grid-template-rows: repeat(var(--cells-count), $cell-size);
 
     transform: translate(
-        calc($cell-size * max(var(--player-x) - 2, 0) * -1),
-        calc($cell-size * max(var(--player-y) - 2, 0) * -1)
+        // twice the same translation for both axis, only detailing one
+        calc(
+                ($cell-size + $board-grid-gap) // unit width
+                * clamp(0, var(--player-x) - 2, var(--cells-count) - 5)
+                    // times (player-x - 2) in a min-max
+                * -1
+            ),
+        // opposite
+        calc(($cell-size + $board-grid-gap) * clamp(0, var(--player-y) - 2, var(--cells-count) - 5) * -1)
     ); // through JavaScript
+    transition: transform 100ms ease-in-out;
 }

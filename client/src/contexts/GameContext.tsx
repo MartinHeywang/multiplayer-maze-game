@@ -1,6 +1,6 @@
 import React, { FC, useContext, useEffect, useRef, useState } from "react";
 
-import { Cell, Coord, Game } from "otd-types";
+import { Cell, Coord, Game, Labyrinth } from "otd-types";
 import { useServerConnection } from "./ServerConnectionContext";
 import { usePlayer } from "./PlayerContext";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,7 @@ type ContextValue = {
     game: Game | null;
     cells: (Cell | null)[][] | null;
     playerPos: Coord | null;
+    dimensions: Labyrinth["dimensions"] | null;
     catchNextGameError: (cb: (err: string) => void) => void;
 };
 
@@ -25,6 +26,7 @@ const GameProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
     const [game, setGame] = useState<Game | null>(null);
     const [cells, setCells] = useState<(Cell | null)[][] | null>(null);
     const [playerPos, setPlayerPos] = useState<Coord | null>(null);
+    const [dimensions, setDimensions] = useState<Labyrinth["dimensions"] | null>(null);
 
     const navigate = useNavigate();
 
@@ -64,10 +66,12 @@ const GameProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
         if (!socket) return;
         if (player?.hasJoinedNextGame !== true) return;
 
-        const handler = (cells: Cell[][], playerPos: Coord) => {
-            setCells(
+        const handler = (dimensions: Labyrinth["dimensions"], cells: Cell[][], playerPos: Coord) => {
+            setDimensions(dimensions);
+
+            setCells(old =>
                 (() => {
-                    let result: (Cell | null)[][] = [];
+                    let result: (Cell | null)[][] = old ?? [];
 
                     cells.flat().forEach(cell => {
                         result[cell.coord.y] ||= [];
@@ -83,10 +87,10 @@ const GameProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
             navigate("/play");
         };
 
-        socket.on("game:start", handler);
+        socket.on("game:player-change", handler);
 
         return () => {
-            socket.off("game:start", handler);
+            socket.off("game:player-change", handler);
         };
     }, [player?.hasJoinedNextGame]);
 
@@ -97,7 +101,7 @@ const GameProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
         errorCallbacks.current.push(cb);
     }
 
-    return <Provider value={{ game, cells, playerPos, catchNextGameError }}>{children}</Provider>;
+    return <Provider value={{ game, cells, playerPos, dimensions, catchNextGameError }}>{children}</Provider>;
 };
 
 export const useGame = () => useContext(GameContext);

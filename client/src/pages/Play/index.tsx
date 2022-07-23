@@ -1,34 +1,60 @@
 import React, { FC, useEffect, useRef } from "react";
 import { useGame } from "@/contexts/GameContext";
 
-import "./scss/Play.scss";
 import Cell from "./Cell";
 
-const Play: FC = () => {
+import "./scss/Play.scss";
+import { useServerConnection } from "@/contexts/ServerConnectionContext";
 
-    const { game, cells } = useGame();
+const Play: FC = () => {
+    const { socket } = useServerConnection();
+    const { cells, playerPos, dimensions } = useGame();
 
     const board = useRef<HTMLDivElement>(null);
+    const componentRoot = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if(!cells) return;
+        if (!cells) return;
+        if (!dimensions) return;
+        if (!playerPos) return;
 
-        const size = cells.length;
+        board.current!.style.setProperty("--cells-count", `${dimensions.w}`);
+        componentRoot.current!.style.setProperty("--player-x", `${playerPos.x}`);
+        componentRoot.current!.style.setProperty("--player-y", `${playerPos.y}`);
+    }, [cells, playerPos, dimensions]);
 
-        board.current!.style.setProperty("--cells-count", `${size}`);
-    }, [cells]);
+    useEffect(() => {
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (/^Arrow.+$/g.test(event.key)) {
+                const direction = event.key.toLowerCase().substring(5) as
+                    | "up"
+                    | "left"
+                    | "right"
+                    | "down";
+                socket?.emit("game:player-move", direction);
+            }
+        };
 
-    return <div className="Play">
-        <div className="board-frame">
-            <div className="board" ref={board}>
-                {cells?.flat().map(cell => {
-                    return <Cell cell={cell} key={`${cell?.coord.x}.${cell?.coord.y}`} />
-                })}
+        window.addEventListener("keydown", onKeyDown);
 
-                <div className="player"></div>
+        return () => {
+            window.removeEventListener("keydown", onKeyDown);
+        };
+    }, []);
+
+    return (
+        <div className="Play" ref={componentRoot}>
+            <div className="board-frame">
+                <div className="board" ref={board}>
+                    {cells?.flat().map(cell => {
+                        return <Cell cell={cell} key={`${cell?.coord.x}.${cell?.coord.y}`} />;
+                    })}
+
+                    <div className="player"></div>
+                </div>
             </div>
         </div>
-    </div>;
+    );
 };
 
 export default Play;
