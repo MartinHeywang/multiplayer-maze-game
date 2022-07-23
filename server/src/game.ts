@@ -183,6 +183,15 @@ function move(socket: OurSocket, direction: "up" | "left" | "right" | "down") {
         getCellsAround(newCoord),
         newCoord
     );
+
+    if (
+        newCoord.x === nextGame!.labyrinth.exitCoord.x &&
+        newCoord.y === nextGame!.labyrinth.exitCoord.y
+    ) {
+        // @ts-ignore
+        // removing hasJoinedNextGame from the sent data
+        socket.emit("game:winner", { ...socket.data.player!, hasJoinedNextGame: undefined });
+    }
 }
 
 // plan all games for the day
@@ -211,7 +220,7 @@ function move(socket: OurSocket, direction: "up" | "left" | "right" | "down") {
         });
     }
 
-    schedule(8, 3);
+    schedule(8, 58);
 
     initiateNewGame();
 }

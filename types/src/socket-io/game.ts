@@ -1,4 +1,4 @@
-import { Cell, Coord, Game, Labyrinth } from "../data";
+import { Cell, Coord, Game, Labyrinth, Player } from "../data";
 
 export interface CTSEvents {
     "game:watch": (watch: boolean) => void;
@@ -21,6 +21,8 @@ export interface STCEvents {
         updatedCells: Cell[][],
         playerPos: Coord
     ) => void;
+
+    "game:winner": (player: Omit<Player, "hasJoinedNextGame">) => void;
 }
 
 export type SocketData = {

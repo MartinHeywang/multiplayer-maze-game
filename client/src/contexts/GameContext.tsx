@@ -1,15 +1,17 @@
 import React, { FC, useContext, useEffect, useRef, useState } from "react";
 
-import { Cell, Coord, Game, Labyrinth } from "otd-types";
+import { Cell, Coord, Game, Labyrinth, Player } from "otd-types";
 import { useServerConnection } from "./ServerConnectionContext";
 import { usePlayer } from "./PlayerContext";
 import { useNavigate } from "react-router-dom";
 
 type ContextValue = {
     game: Game | null;
+
     cells: (Cell | null)[][] | null;
     playerPos: Coord | null;
     dimensions: Labyrinth["dimensions"] | null;
+    winner: Omit<Player, "hasJoinedNextGame"> | null;
     catchNextGameError: (cb: (err: string) => void) => void;
 };
 
@@ -23,10 +25,12 @@ const GameProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
     const { socket } = useServerConnection();
     const { player } = usePlayer();
 
-    const [game, setGame] = useState<Game | null>(null);
-    const [cells, setCells] = useState<(Cell | null)[][] | null>(null);
-    const [playerPos, setPlayerPos] = useState<Coord | null>(null);
-    const [dimensions, setDimensions] = useState<Labyrinth["dimensions"] | null>(null);
+    const [game, setGame] = useState<ContextValue["game"]>(null);
+    const [cells, setCells] = useState<ContextValue["cells"]>(null);
+    const [playerPos, setPlayerPos] = useState<ContextValue["playerPos"]>(null);
+    const [dimensions, setDimensions] = useState<ContextValue["dimensions"]>(null);
+
+    const [winner, setWinner] = useState<ContextValue["winner"]>(null);
 
     const navigate = useNavigate();
 
@@ -85,6 +89,8 @@ const GameProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
             setPlayerPos(playerPos);
 
             navigate("/play");
+
+            socket.once("game:winner", (player) => setWinner(player));
         };
 
         socket.on("game:player-change", handler);
@@ -101,7 +107,7 @@ const GameProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
         errorCallbacks.current.push(cb);
     }
 
-    return <Provider value={{ game, cells, playerPos, dimensions, catchNextGameError }}>{children}</Provider>;
+    return <Provider value={{ game, cells, playerPos, dimensions, winner, catchNextGameError }}>{children}</Provider>;
 };
 
 export const useGame = () => useContext(GameContext);

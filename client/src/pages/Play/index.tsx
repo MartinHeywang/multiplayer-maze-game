@@ -5,13 +5,16 @@ import Cell from "./Cell";
 
 import "./scss/Play.scss";
 import { useServerConnection } from "@/contexts/ServerConnectionContext";
+import { useNavigate } from "react-router-dom";
 
 const Play: FC = () => {
     const { socket } = useServerConnection();
-    const { cells, playerPos, dimensions } = useGame();
+    const { cells, playerPos, dimensions, winner } = useGame();
 
     const board = useRef<HTMLDivElement>(null);
     const componentRoot = useRef<HTMLDivElement>(null);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!cells) return;
@@ -22,6 +25,12 @@ const Play: FC = () => {
         componentRoot.current!.style.setProperty("--player-x", `${playerPos.x}`);
         componentRoot.current!.style.setProperty("--player-y", `${playerPos.y}`);
     }, [cells, playerPos, dimensions]);
+
+    useEffect(() => {
+        if(!winner) return;
+
+        navigate("/game-end");
+    }, [winner])
 
     useEffect(() => {
         const onKeyDown = (event: KeyboardEvent) => {
