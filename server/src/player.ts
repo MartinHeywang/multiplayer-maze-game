@@ -10,7 +10,6 @@ export function registerSocket(_: OurServer, socket: OurSocket) {
     const data: Player = {
         username: randomUsername(),
         avatarUrl: randomAvatarUrl(),
-
         hasJoinedNextGame: false,
     };
 
