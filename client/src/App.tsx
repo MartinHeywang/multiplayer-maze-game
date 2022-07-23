@@ -3,6 +3,7 @@ import React, { FC } from "react";
 import HomePage from "@/pages/Home";
 import LoadingPage from "@/pages/Loading";
 import SetupPage from "@/pages/Setup";
+
 import RoomPage from "@/pages/Room";
 import PlayPage from "@/pages/Play";
 import GameEndPage from "@/pages/GameEnd";
