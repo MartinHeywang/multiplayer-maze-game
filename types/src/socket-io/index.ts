@@ -13,4 +13,4 @@ type OurServer = Server<CTSEvents, STCEvents, ISEvents, SocketData>;
 type OurSocket = Socket<CTSEvents, STCEvents, ISEvents, SocketData>;
 type OurClientSocket = ClientSocket<STCEvents, CTSEvents>;
 
-export { OurServer, OurSocket, OurClientSocket };
+export type { OurServer, OurSocket, OurClientSocket };
