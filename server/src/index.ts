@@ -5,9 +5,13 @@ import ip from "ip";
 
 import * as player from "./player";
 import * as game from "./game";
-import { loadRandomLabyrinth } from "./labyrinths/loader";
 
-const httpServer = createServer();
+const httpServer = createServer((req, res) => {
+    res.write("OK!");
+    res.statusCode = 200;
+    res.end();
+});
+
 export const io: OurServer = new Server(httpServer, {
     cors: {},
 });
