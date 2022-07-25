@@ -4,11 +4,13 @@ import { OurClientSocket } from "otd-types";
 
 import { io } from "socket.io-client";
 
+import ip from "ip";
+
 import serverConfig from "@/data/serverConfig";
 
 type ContextValue = {
     socket: OurClientSocket | null;
-    connect?: (ip: string) => Promise<OurClientSocket>;
+    connect?: (ip?: string) => Promise<OurClientSocket>;
     disconnect?: () => void;
 };
 
@@ -24,24 +26,35 @@ const ServerConnectionProvider: FC<{ children: React.ReactNode }> = ({ children 
 
     const isSocketUsable = () => socket !== null && socket.connected;
 
-    function connect(ip: string) {
+    function connect(ipPlusPort?: string) {
         return new Promise<OurClientSocket>((resolve, reject) => {
             if (isSocketUsable()) reject(new Error("Une autre connexion est active en ce moment."));
 
-            const invalidFormatError = () =>
-                reject(new Error("Format d'IP invalide. (exemple: 127.0.0.1)"));
+            const rejectError = (msg: string) => reject(new Error(msg));
+            const invalidFormatMsg = "Format d'IP invalide.";
 
-            const ipStringArray = ip.split(".");
-            if (ipStringArray.length !== 4) return invalidFormatError();
+            let url = "https://multiplayer-maze-game.herokuapp.com";
 
-            try {
-                ipStringArray.map(term => parseInt(term));
-            } catch {
-                return invalidFormatError();
+            if (ipPlusPort !== undefined) {
+                const [ipAddress, port] = ipPlusPort.split(":");
+
+                if (!ip.isV4Format(ipAddress)) {
+                    return rejectError(invalidFormatMsg);
+                }
+
+                if (!ip.isPrivate(ipAddress)) {
+                    return rejectError("Cette IP ne désigne pas un réseau privé.");
+                }
+
+                const portNumber = parseInt(port);
+                if (portNumber === NaN) return rejectError("Veuillez également renseigner un port.");
+                if (portNumber > 65535) return rejectError(invalidFormatMsg);
+
+                url = `http://${ipAddress}:${port}`;
             }
 
-            const socket = io(`http://${ip}:${serverConfig.port}`, {
-                reconnectionAttempts: 3
+            const socket = io(url, {
+                reconnectionAttempts: 3,
             });
 
             let invalid = false;
@@ -51,8 +64,6 @@ const ServerConnectionProvider: FC<{ children: React.ReactNode }> = ({ children 
                 invalid = !invalid;
                 return invalid;
             };
-
-            // perhaps we will add a timeout here, but we'll keep it simple right now
 
             socket.once("connect", () => {
                 if (!invalidate()) return;
@@ -65,8 +76,8 @@ const ServerConnectionProvider: FC<{ children: React.ReactNode }> = ({ children 
                 if (!invalidate()) return;
 
                 const errorMap = {
-                    "xhr poll error": "IP incorrecte ou serveur indisponible."
-                }
+                    "xhr poll error": `Serveur indisponible${ip !== undefined ? " ou IP incorrecte" : ""}.`,
+                };
 
                 // convert socket.io message to user-friendly message
                 reject(new Error(errorMap[error.message as keyof typeof errorMap] ?? "Erreur interne."));

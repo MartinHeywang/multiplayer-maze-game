@@ -1,21 +1,18 @@
+@use "./Card.scss";
+
 .Setup {
     padding: 5rem 0;
 
     .Card .header {
         display: flex;
         align-items: center;
-        margin-bottom: 2em;
 
         .step-number {
-            // display: grid;
-            // place-items: center;
-
             $value: 2.5rem;
 
             aspect-ratio: 1 / 1;
             width: $value;
             height: $value;
-            // text-align: center;
 
             font-size: $value;
             line-height: $value;
