@@ -1,5 +1,6 @@
 import React, { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import Container from "@/components/ui/Container";
 
