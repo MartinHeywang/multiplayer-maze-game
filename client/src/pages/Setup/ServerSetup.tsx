@@ -8,15 +8,17 @@ import { useServerConnection } from "@/contexts/ServerConnectionContext";
 
 interface Props {
     nextStep: () => void;
-}   
+}
 
-const ServerSetup: FC<Props> = ({nextStep}) => {
-
+const ServerSetup: FC<Props> = ({ nextStep }) => {
     const [ready, setReady] = useState(false);
+
+    const [autoMode, setAutoMode] = useState(process.env.NODE_ENV === "development" ? false : true);
 
     const { connect } = useServerConnection();
     const ipField = useRef<HTMLInputElement>(null);
-    const ipFieldID = useId();
+
+    const id = useId();
 
     const messageParagraph = useRef<HTMLParagraphElement>(null);
 
@@ -28,11 +30,8 @@ const ServerSetup: FC<Props> = ({nextStep}) => {
     }
 
     function handleSubmit() {
-        if (!ipField.current) return;
+        const ip = ipField.current?.value;
 
-        const ip = ipField.current.value;
-
-        console.log(`submit from with ip ${ip}`);
 
         connect!(ip)
             .then(() => {
@@ -51,20 +50,41 @@ const ServerSetup: FC<Props> = ({nextStep}) => {
                 <div className="step-number">1</div>
                 <p className="step-title">Se connecter à un serveur.</p>
             </header>
+
             <p className="message" ref={messageParagraph}></p>
-            <form className="form" onSubmit={e => e.preventDefault()}>
-                <label className="form-label" htmlFor={ipFieldID}>
-                    Entre l'IP du serveur ici&nbsp;:
+
+            <div className="checkbox-box">
+                <label htmlFor={`${id}-checkbox`} className="checkbox-label">
+                    Configuration automatique
                 </label>
-                <input className="form-input" id={ipFieldID} ref={ipField} type="text" onChange={() => setMessage("info", "")}/>
-                <p className="help">
-                    Une adresse IP est constituée de quatre nombres séparés par des points. Demande-la au
-                    propriétaire du serveur si tu ne la connais pas!
-                </p>
-                <Button className="connect-btn" action={handleSubmit}>
-                    Se connecter
-                </Button>
-            </form>
+                <input
+                    type="checkbox"
+                    id={`${id}-checkbox`}
+                    className="checkbox"
+                    onChange={e => setAutoMode(e.target.checked)}
+                    defaultChecked={autoMode}
+                />
+            </div>
+
+            {autoMode === false && (
+                <form className="form" onSubmit={e => e.preventDefault()}>
+                    <label className="form-label" htmlFor={`${id}-field`}>
+                        Entre l'IP du serveur ici&nbsp;:
+                    </label>
+                    <input
+                        className="form-input"
+                        id={`${id}-field`}
+                        ref={ipField}
+                        type="text"
+                        onChange={() => setMessage("info", "")}
+                        placeholder="ex. 192.168.0.1:8080"
+                    />
+                </form>
+            )}
+
+            <Button className="connect-btn" action={handleSubmit}>
+                Se connecter
+            </Button>
 
             <hr />
 

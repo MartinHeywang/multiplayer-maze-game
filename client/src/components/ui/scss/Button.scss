@@ -2,11 +2,11 @@
     display: inline-block;
     
     border: none;
-    background-color: var(--clr-primary-600);
+    background-color: var(--bgc, var(--clr-primary-600));
     padding: .5em 1.5em;
 
     font: inherit;
-    color: var(--clr-neutral-900);
+    color: var(--c, var(--clr-neutral-900));
     font-weight: bold;
 }
 
