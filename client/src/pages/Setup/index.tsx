@@ -1,12 +1,12 @@
 import React, { FC, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Container from "@/components/ui/Container";
 
 import ServerSetup from "./ServerSetup";
+import PlayerSetup from "./PlayerSetup";
 
 import "./scss/Setup.scss";
-import PlayerSetup from "./PlayerSetup";
-import { useNavigate } from "react-router-dom";
 
 const Setup: FC<{}> = () => {
     const [step, setStep] = useState(0);

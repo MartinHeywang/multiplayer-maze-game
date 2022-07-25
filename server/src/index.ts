@@ -5,15 +5,19 @@ import ip from "ip";
 
 import * as player from "./player";
 import * as game from "./game";
-import { loadRandomLabyrinth } from "./labyrinths/loader";
 
-const httpServer = createServer();
+const httpServer = createServer((req, res) => {
+    res.write("OK!");
+    res.statusCode = 200;
+    res.end();
+});
+
 export const io: OurServer = new Server(httpServer, {
     cors: {},
 });
 
 const HOSTNAME = ip.address();
-const PORT = 5000;
+const PORT = process.env.PORT ?? 5000;
 
 io.on("connection", socket => {
     console.log(`Socket ${socket.id} has just connected to the server!`);
@@ -26,6 +30,6 @@ io.on("connection", socket => {
     });
 });
 
-httpServer.listen(PORT, HOSTNAME, () => {
+httpServer.listen(PORT, () => {
     console.log(`Ready on http://${HOSTNAME}:${PORT}`);
 });
