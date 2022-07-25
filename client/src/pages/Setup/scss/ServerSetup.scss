@@ -1,4 +1,16 @@
 .ServerSetup {
+    .checkbox-box {
+        margin: 1.5em 0;
+        padding: 1em;
+        font-size: 1.2rem;
+        background-color: var(--clr-primary-100);
+
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: start;
+        gap: 0.5em;
+        accent-color: var(--clr-primary-600);
+    }
 
     .form {
         .form-label,
@@ -29,6 +41,10 @@
         }
     }
 
+    .form ~ .connect-btn {
+        margin-top: 2em;
+    }
+
     .connect-btn,
     .next-btn {
         width: 100%;
@@ -38,7 +54,8 @@
         display: inline-block;
         font-size: 1.1rem;
         padding: 0.2em 0.5em;
-        margin-top: 0;
+        margin-top: 1.5em;
+        margin-bottom: 0;
 
         background-color: var(--bgc, inherit);
         color: var(--c, inherit);
