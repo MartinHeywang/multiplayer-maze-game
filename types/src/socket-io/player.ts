@@ -8,8 +8,8 @@ export interface CTSEvents {
 }
 
 export interface STCEvents {
-    "player:update": (player: Player) => void;
+    "player:update": (player: Partial<Player>) => void;
     "player:error": (message: string) => void;
 }
 
-export type SocketData = Player;
+export type SocketData = { id: string };
