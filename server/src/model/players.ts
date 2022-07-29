@@ -3,9 +3,9 @@ import { Player } from "otd-types";
 
 const players = new Map<string, Player>();
 
-export const get = players.get;
-export const list = players.values;
-export const exists = players.has;
+export const get = (id: string) => players.get(id);
+export const list = () => players.values();
+export const exists = (id: string) => players.has(id);
 
 export function create(username = randomUsername()) {
     const id = uuidv4();
@@ -26,7 +26,7 @@ export function changeUsername(id: string, username: string) {
 
     const editing = players.get(id);
     if (editing === undefined) throw new Error("Player not found.");
-    
+
     const edited = { ...editing, username };
     players.set(id, edited);
 
@@ -37,14 +37,13 @@ export function changeAvatar(id: string) {
     const editing = players.get(id);
     if (editing === undefined) throw new Error("Player not found.");
 
-    const edited = {...editing, avatarUrl: randomAvatarUrl()};
+    const edited = { ...editing, avatarUrl: randomAvatarUrl() };
     players.set(id, edited);
 
     return edited;
-
 }
 
-export const remove = players.delete;
+export const remove = (id: string) => players.delete(id);
 
 // UTILITY METHODS ------------------------------------------------------------
 

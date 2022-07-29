@@ -14,7 +14,7 @@ export function registerSocket(socket: OurSocket) {
     socket.on("player:change-pseudo", changeUsername);
     socket.on("player:change-avatar", changeAvatar);
     socket.on("player:request-update", requestUpdate);
-    socket.on("disconnect", () => players.remove(id(socket)!));
+    socket.on("disconnecting", () => players.remove(id(socket)!));
 
     const caught = (cb: () => Partial<Player>) => {
         const update = (player: Partial<Player>) => socket.emit("player:update", player);
@@ -46,7 +46,7 @@ export function registerSocket(socket: OurSocket) {
         caught(() => {
             const player = players.get(id(socket)!);
             if (!player) throw new Error("Player not found.");
-            
+
             return player;
         });
     }

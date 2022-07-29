@@ -18,19 +18,13 @@ export const get = () => game;
 // this function is exported so it can be called from the main file
 // when the server is ready
 export function handleGameWhenAvailable() {
-    setImmediate(() => {
-        const interval = setInterval(() => {
-            const temp = games.getNextGame();
-            if (temp === null) return;
+    const interval = setInterval(() => {
+        const temp = games.getNextGame();
+        if (temp === null) return;
 
-            initiateNextGame(temp);
-        }, 5000);
-
-        // this loop might run for a long time
-        // that's why we wrapped our code around setImmediate
-        while (!game) {}
+        initiateNextGame(temp);
         clearInterval(interval);
-    });
+    }, 5000);
 }
 
 function initiateNextGame(newGame: Game) {
@@ -57,7 +51,7 @@ function startGame() {
 
     play.start(game);
     game = null;
-    
+
     gameEvents.disable();
 }
 

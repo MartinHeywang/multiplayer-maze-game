@@ -30,7 +30,7 @@ export function schedule(utcHour: number, utcMinute: number) {
     return game;
 }
 
-export const list = games.values;
+export const list = () => games.values();
 
 export function getNextGame() {
     const it = list();
