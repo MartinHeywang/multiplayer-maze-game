@@ -20,16 +20,6 @@ const GlobalContexts: FC<{ children: React.ReactNode }> = ({ children }) => {
     );
 };
 
-const GlobalContexts: FC<{ children: React.ReactNode }> = ({ children }) => {
-    return (
-        <ServerConnectionProvider>
-            <PlayerProvider>
-                <GameProvider>{children}</GameProvider>
-            </PlayerProvider>
-        </ServerConnectionProvider>
-    );
-};
-
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
         <HashRouter>
