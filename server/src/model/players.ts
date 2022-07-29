@@ -14,7 +14,6 @@ export function create(username = randomUsername()) {
         id,
         username,
         avatarUrl: randomAvatarUrl(),
-        hasJoinedNextGame: false,
     };
 
     players.set(id, player);

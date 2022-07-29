@@ -1,6 +1,7 @@
 export interface Game {
-    status: "closed" | "opened" | "playing";
-    plannedStartTime: Date;
+    id: string;
+    status: "closed" | "opened" | "preparing" | "playing";
+    startTime: Date;
 }
 
 export type Cell = {

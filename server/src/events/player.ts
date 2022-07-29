@@ -1,11 +1,15 @@
 import { OurSocket, Player } from "otd-types";
-import * as players from "../models/players";
+import * as players from "../model/players";
 
 const id = (socket: OurSocket) => socket.data.player?.id;
+export const playerId = id;
+
+export const playerIdToSocket = new Map<string, OurSocket>();
 
 export function registerSocket(socket: OurSocket) {
     const player = players.create();
     socket.data = { ...socket.data, player: { id: player.id } };
+    playerIdToSocket.set(player.id, socket);
 
     socket.on("player:change-pseudo", changeUsername);
     socket.on("player:change-avatar", changeAvatar);
