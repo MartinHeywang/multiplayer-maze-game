@@ -31,10 +31,8 @@ const Room: FC = () => {
     useEffect(() => {
         if (!game) return;
 
-        console.log(game.plannedStartTime);
-
         const interval = setInterval(() => {
-            setCountdownText(formatDuration(game.plannedStartTime.getTime() - Date.now()));
+            setCountdownText(formatDuration(game.startTime.getTime() - Date.now()));
         }, 1000);
 
         return () => clearInterval(interval);
@@ -54,13 +52,13 @@ const Room: FC = () => {
                         {game!.status !== "playing" && (
                             <>
                                 <h2>Inscription</h2>
-                                {game!.status !== "opened" ? (
+                                {game.status !== "opened" ? (
                                     <p>
                                         Il est encore impossible de rejoindre cette partie. Il devient
                                         possible de rejoindre une partie à partir de 5 minutes avant son
                                         début.
                                     </p>
-                                ) : !player!.hasJoinedNextGame ? (
+                                ) : !game.joined ? (
                                     <>
                                         <p>L'inscription est ouverte!</p>
                                         <Button action={() => socket!.emit("game:join")}>

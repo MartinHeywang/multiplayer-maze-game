@@ -8,8 +8,9 @@ $wall-width: 2px;
     place-items: center;
     min-height: 100vh;
 
-    --player-x: 2;
-    --player-y: 3;
+    // these are used in inline styles set through JavaScript
+    --cell-size: #{$cell-size};
+    --board-grid-gap: #{$board-grid-gap};
 
     .player {
         position: absolute;
@@ -19,10 +20,6 @@ $wall-width: 2px;
         height: 3em;
         background-color: yellow;
 
-        transform: translate(
-            calc(var(--player-x) * ($cell-size + $board-grid-gap)),
-            calc(var(--player-y) * ($cell-size + $board-grid-gap))
-        );
         transition: transform 100ms ease-in-out;
     }
 }
@@ -41,20 +38,20 @@ $wall-width: 2px;
     display: grid;
     gap: $board-grid-gap;
 
-    --cells-count: 5; // default overridden through JavaScript
-    grid-template-columns: repeat(var(--cells-count), $cell-size);
-    grid-template-rows: repeat(var(--cells-count), $cell-size);
+    position: relative;
+
+    grid-template-columns: repeat(var(--cells-w), $cell-size);
+    grid-template-rows: repeat(var(--cells-h), $cell-size);
 
     transform: translate(
         // twice the same translation for both axis, only detailing one
         calc(
                 ($cell-size + $board-grid-gap) // unit width
-                * clamp(0, var(--player-x) - 2, var(--cells-count) - 5)
+                * clamp(0, var(--player-x) - 2, var(--cells-w) - 5)
                     // times (player-x - 2) in a min-max
                 * -1
             ),
-        // opposite
-        calc(($cell-size + $board-grid-gap) * clamp(0, var(--player-y) - 2, var(--cells-count) - 5) * -1)
+        calc(($cell-size + $board-grid-gap) * clamp(0, var(--player-y) - 2, var(--cells-h) - 5) * -1)
     ); // through JavaScript
     transition: transform 100ms ease-in-out;
 }

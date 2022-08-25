@@ -8,8 +8,7 @@ export interface CTSEvents {
 export interface STCEvents {
     "play:start": () => void;
     "play:end": (winner: Player) => void;
-    
-    "play:cells": (cells: Cell[]) => void;
-    "play:player": (playerId: string, position: Coord) => void;
 
+    "play:cells": (cells: Cell[]) => void;
+    "play:players": (...players: (Player & { position: Coord })[]) => void;
 }

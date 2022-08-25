@@ -49,8 +49,9 @@ function openInscription() {
 function startGame() {
     if (!game) /* should never happen */ return;
 
-    play.start(game);
+    const temp = game;
     game = null;
+    play.start(temp);
 
     gameEvents.disable();
 }

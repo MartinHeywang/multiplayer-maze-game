@@ -16,7 +16,7 @@ const Cell: FC<Props> = ({ cell }) => {
                     className={`Cell ${cell?.bottomWall ? "Cell--bottom-wall" : ""} ${
                         cell?.rightWall ? "Cell--right-wall" : ""
                     } ${cell?.start ? "Cell--start" : ""} ${cell?.exit ? "Cell--exit" : ""}`}
-                    style={{ gridRow: `${cell?.coord.y + 1} ` }}
+                    style={{ gridRow: `${cell?.coord.y + 1} `, gridColumn: `${cell?.coord.x + 1}` }}
                 ></div>
             ) : (
                 <></>

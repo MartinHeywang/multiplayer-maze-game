@@ -41,6 +41,7 @@ httpServer.listen(PORT, () => {
 
     // schedule games
     if (process.env.NODE_ENV === "development") {
+        console.log("we're developing, scheduling game in two minutes.")
         // in dev, schedule a game after server restarts
         games.schedule(new Date().getUTCHours(), new Date().getUTCMinutes() + 2);
     } else {

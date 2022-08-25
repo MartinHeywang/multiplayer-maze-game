@@ -14,7 +14,15 @@ export const disable = () => (areEventsActivated = false);
 
 export function registerSocket(socket: OurSocket) {
     const id = playerId(socket);
-    if (id) return;
+    if (!id) return;
+
+    socket.on("play:move", move);
+
+    function move(dir: "up" | "right" | "down" | "left") {
+        try {
+            playingGame.move(id!, dir);
+        } catch (err) {}
+    }
 }
 
 function allPlayers() {
@@ -37,6 +45,7 @@ export function sendCells(cells: Cell[], to?: Player[]) {
         while (!next.done) {
             const { value } = next;
             if (playersId.includes(value[0])) list.push(value[1]);
+            next = map.next();
         }
 
         return io.to(list.map(socket => socket.id));
@@ -45,10 +54,8 @@ export function sendCells(cells: Cell[], to?: Player[]) {
     sockets.emit("play:cells", cells);
 }
 
-export function sendPlayer(player: PlayingPlayer) {
-    allPlayers().emit("play:player", player.id, player.position);
+export function sendPlayers(...players: PlayingPlayer[]) {
+    allPlayers().emit("play:players", ...players);
 }
 
-export function sendWinner(player: Player & {position: Coord}) {
-
-}
+export function sendWinner(player: Player & { position: Coord }) {} // fixme implement

@@ -33,7 +33,12 @@ export function start(newGame: NextGame) {
     gameEvents.notifyGameStatusChange("playing");
 
     playEvents.sendStart();
-    playEvents.sendCells(getCellsAround(labyrinth.startCoord));
+
+    // wait a bit so that every client is able to set up their listeners for that event
+    setTimeout(() => {
+        playEvents.sendCells(getCellsAround(labyrinth.startCoord));
+        playEvents.sendPlayers(...game!.players);
+    }, 3000);
 
     playEvents.enable();
 }
@@ -57,14 +62,15 @@ function getCellsAround(coord: Coord) {
 
     for (let y = minY; y <= maxY; y++) {
         for (let x = minX; x <= maxX; x++) {
-            result.push(labyrinth.cells[y][x]);
+            const cell = labyrinth.cells[y][x];
+            result.push(cell);
         }
     }
 
     return result;
 }
 
-function move(playerId: string, direction: "up" | "left" | "right" | "down") {
+export function move(playerId: string, direction: "up" | "left" | "right" | "down") {
     if (!game) throw new Error("No game is playing right now.");
 
     const player = Array.from(game.players).find(player => player.id === playerId);
@@ -97,7 +103,8 @@ function move(playerId: string, direction: "up" | "left" | "right" | "down") {
     if (isMoveImpossible()) return;
 
     player.position = newPos;
-    playEvents.sendPlayer(player);
+    playEvents.sendPlayers(player);
+    playEvents.sendCells(getCellsAround(newPos), [player]);
 
     if (newPos.x === game!.labyrinth.exitCoord.x && newPos.y === game!.labyrinth.exitCoord.y) {
         playEvents.sendWinner(player);

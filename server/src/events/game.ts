@@ -54,8 +54,12 @@ export function registerSocket(socket: OurSocket) {
 }
 
 export function notifyGameStatusChange(status: Game["status"] | NextGame["status"] | PlayingGame["status"]) {
+    console.log(`notify status: ${status} (before verification)`);
     const currentGame = nextGame.get() ?? playingGame.get();
+    console.log(currentGame);
     if (currentGame === null || currentGame.status !== status) return;
+
+    console.log("verification passed, emitting");
 
     io.emit("game:update", { status });
 }
