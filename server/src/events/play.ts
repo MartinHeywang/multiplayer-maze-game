@@ -58,4 +58,6 @@ export function sendPlayers(...players: PlayingPlayer[]) {
     allPlayers().emit("play:players", ...players);
 }
 
-export function sendWinner(player: Player & { position: Coord }) {} // fixme implement
+export function sendWinner(winner: Player) {
+    allPlayers().emit("play:end", winner);
+}

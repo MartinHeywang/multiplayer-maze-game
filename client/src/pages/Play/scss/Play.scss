@@ -18,9 +18,15 @@ $wall-width: 2px;
         left: calc(1em - 1px);
         width: 3em;
         height: 3em;
-        background-color: yellow;
+
+        background-color: rgba(0, 0, 255, .3);
 
         transition: transform 100ms ease-in-out;
+    }
+
+    .our-player {
+        background-color: yellow;
+        z-index: 2;
     }
 }
 
